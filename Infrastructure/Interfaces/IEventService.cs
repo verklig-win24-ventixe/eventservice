@@ -1,9 +1,10 @@
-using Data.Entities;
+using Infrastructure.Models;
 
 namespace Infrastructure.Interfaces;
 
 public interface IEventService
 {
-  Task<IEnumerable<EventEntity>> GetAllAsync();
-  Task<EventEntity?> GetAsync(string id);
+  Task<EventResult> CreateEventAsync(CreateEventRequest request);
+  Task<EventResult<IEnumerable<Event>>> GetAllEventsAsync();
+  Task<EventResult<Event?>> GetEventAsync(string id);
 }

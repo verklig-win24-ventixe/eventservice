@@ -9,7 +9,7 @@ namespace Data.Repositories;
 
 public class EventRepository(DataContext context) : BaseRepository<EventEntity>(context), IEventRepository
 {
-  public override async Task<RepositoryResult<IEnumerable<EventEntity>>> GetAllAsync(EventEntity entity)
+  public override async Task<RepositoryResult<IEnumerable<EventEntity>>> GetAllAsync()
   {
     try
     {

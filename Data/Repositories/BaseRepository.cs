@@ -1,11 +1,12 @@
 using System.Linq.Expressions;
 using Data.Contexts;
+using Data.Interfaces;
 using Data.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data.Repositories;
 
-public abstract class BaseRepository<TEntity>(DataContext context) where TEntity : class
+public abstract class BaseRepository<TEntity>(DataContext context) : IBaseRepository<TEntity> where TEntity : class
 {
   protected readonly DataContext _context = context;
   protected readonly DbSet<TEntity> _db = context.Set<TEntity>();
@@ -55,7 +56,7 @@ public abstract class BaseRepository<TEntity>(DataContext context) where TEntity
     }
   }
 
-  public virtual async Task<RepositoryResult<IEnumerable<TEntity>>> GetAllAsync(TEntity entity)
+  public virtual async Task<RepositoryResult<IEnumerable<TEntity>>> GetAllAsync()
   {
     try
     {
