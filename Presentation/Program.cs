@@ -12,7 +12,10 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer(builder.Configuration.GetConnectionString("SqlConnection")));
 
-builder.Services.AddScoped<IEventRepository, EventRepository>();  
+builder.Services.AddScoped<IEventRepository, EventRepository>();
+builder.Services.AddScoped<IPackageRepository, PackageRepository>();
+builder.Services.AddScoped<IEventPackageRepository, EventPackageRepository>();
+
 builder.Services.AddScoped<IEventService, EventService>();
 
 var app = builder.Build();

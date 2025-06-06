@@ -5,9 +5,11 @@ using Infrastructure.Models;
 
 namespace Infrastructure.Services;
 
-public class EventService(IEventRepository eventRepository) : IEventService
+public class EventService(IEventRepository eventRepository, IPackageRepository packageRepository, IEventPackageRepository eventPackageRepository) : IEventService
 {
   private readonly IEventRepository _eventRepository = eventRepository;
+  private readonly IPackageRepository _packageRepository = packageRepository;
+  private readonly IEventPackageRepository _eventPackageRepository = eventPackageRepository;
 
   public async Task<EventResult> CreateEventAsync(CreateEventRequest request)
   {
@@ -22,11 +24,39 @@ public class EventService(IEventRepository eventRepository) : IEventService
         Description = request.Description
       };
 
-      var result = await _eventRepository.AddAsync(eventEntity);
+      var eventResult = await _eventRepository.AddAsync(eventEntity);
+      if (!eventResult.Success)
+      {
+        return new EventResult { Success = false, Error = eventResult.Error };
+      }
 
-      return result.Success
-        ? new EventResult { Success = true }
-        : new EventResult { Success = false, Error = result.Error };
+      foreach (var package in request.Packages)
+      {
+        var packageEntity = new PackageEntity
+        {
+          Title = package.Title,
+          SeatingArrangement = package.SeatingArrangement,
+          Placement = package.Placement,
+          Price = package.Price,
+          Currency = package.Currency
+        };
+
+        var packageResult = await _packageRepository.AddAsync(packageEntity);
+        if (!packageResult.Success)
+        {
+          continue;
+        }
+
+        var eventPackageEntity = new EventPackageEntity
+        {
+          EventId = eventEntity.Id,
+          PackageId = packageEntity.Id
+        };
+
+        await _eventPackageRepository.AddAsync(eventPackageEntity);
+      }
+
+      return new EventResult { Success = true };
     }
     catch (Exception ex)
     {

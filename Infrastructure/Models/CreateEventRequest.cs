@@ -8,4 +8,5 @@ public class CreateEventRequest
   public string Location { get; set; } = null!;
   public string Description { get; set; } = null!;
 
+  public List<PackageInput> Packages { get; set; } = [];
 }
