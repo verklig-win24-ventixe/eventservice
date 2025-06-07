@@ -74,9 +74,17 @@ public class EventService(IEventRepository eventRepository, IPackageRepository p
       Title = entity.Title,
       EventDate = entity.EventDate,
       Location = entity.Location,
-      Description = entity.Description
-    }
-    );
+      Description = entity.Description,
+      Packages = [.. entity.Packages.Select(p => new Package
+      {
+        Id = p.Package.Id,
+        Title = p.Package.Title,
+        SeatingArrangement = p.Package.SeatingArrangement!,
+        Placement = p.Package.Placement,
+        Price = p.Package.Price,
+        Currency = p.Package.Currency!
+      })]
+    });
 
     return new EventResult<IEnumerable<Event>> { Success = true, Result = events };
   }
@@ -93,7 +101,16 @@ public class EventService(IEventRepository eventRepository, IPackageRepository p
         Title = result.Result.Title,
         EventDate = result.Result.EventDate,
         Location = result.Result.Location,
-        Description = result.Result.Description
+        Description = result.Result.Description,
+        Packages = [.. result.Result.Packages.Select(p => new Package
+        {
+          Id = p.Package.Id,
+          Title = p.Package.Title,
+          SeatingArrangement = p.Package.SeatingArrangement!,
+          Placement = p.Package.Placement,
+          Price = p.Package.Price,
+          Currency = p.Package.Currency!
+        })]
       };
 
       return new EventResult<Event?> { Success = true, Result = currentEvent };

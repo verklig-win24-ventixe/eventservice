@@ -13,7 +13,7 @@ public class EventRepository(DataContext context) : BaseRepository<EventEntity>(
   {
     try
     {
-      var entities = await _db.Include(x => x.Packages).ToListAsync();
+      var entities = await _db.Include(x => x.Packages).ThenInclude(p => p.Package).ToListAsync();
 
       return new RepositoryResult<IEnumerable<EventEntity>> { Success = true, Result = entities };
     }
@@ -27,7 +27,7 @@ public class EventRepository(DataContext context) : BaseRepository<EventEntity>(
   {
     try
     {
-      var entity = await _db.Include(x => x.Packages).FirstOrDefaultAsync(expression) ?? throw new Exception("Entity was not found.");
+      var entity = await _db.Include(x => x.Packages).ThenInclude(p => p.Package).FirstOrDefaultAsync(expression) ?? throw new Exception("Entity was not found.");
 
       return new RepositoryResult<EventEntity?> { Success = true, Result = entity };
     }
