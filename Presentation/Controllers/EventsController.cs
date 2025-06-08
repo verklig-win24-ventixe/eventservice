@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Infrastructure.Models;
 using Infrastructure.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Presentation.Controllers;
 
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class EventsController(IEventService eventService) : ControllerBase
